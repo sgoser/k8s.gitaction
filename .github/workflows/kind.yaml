@@ -1,9 +1,10 @@
-name: CI. minikube deploy
+
+name: CI. kind deploy
 
 on: push
 
 jobs:
-  minikube:
+  kind:
     env:
       result_file: result.log
     runs-on: ubuntu-latest
@@ -12,15 +13,14 @@ jobs:
 
     - name: Send time start jobs
       run: |
-        echo "Start minikube deployment:  $(date '+%F %T')" >> ${{ env.result_file }}
+        echo "Start kind deployment:  $(date '+%F %T')" >> ${{ env.result_file }}
 
-    - name: start minikube
-      id: minikube
-      uses: medyagh/setup-minikube@latest
+    - name: Create k8s Kind Cluster
+      uses: helm/kind-action@v1.4.0
 
     - name: Send time finish jobs
       run: |
-        echo "Finish minikube deployment: $(date '+%F %T')" >> ${{ env.result_file }}
+        echo "Finish kind deployment: $(date '+%F %T')" >> ${{ env.result_file }}
 
     - name: kubernetes info gathering
       run: |
