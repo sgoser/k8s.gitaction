@@ -6,21 +6,25 @@ jobs:
   minikube:
     env:
       result_file: result.log
+    outputs:
+      start_timer: ${{ steps.time.outputs.start_timer }}
     runs-on: ubuntu-latest
 
     steps:
 
     - name: Send time start jobs
+      id: time
       run: |
         echo "Start minikube deployment:  $(date '+%F %T')" >> ${{ env.result_file }}
+        echo "::set-output name=start_timer::$(date '+%s')"
 
     - name: start minikube
-      id: minikube
       uses: medyagh/setup-minikube@latest
 
     - name: Send time finish jobs
       run: |
         echo "Finish minikube deployment: $(date '+%F %T')" >> ${{ env.result_file }}
+        echo "Time nedeed for setup: $(($(date '+%s')-${{ steps.time.outputs.start_timer }})) seconds" >> ${{env.result_file}}
 
     - name: kubernetes info gathering
       run: |
